@@ -3,20 +3,34 @@
 def solution():
     return 0
     
-def readInput():
-    inputList = [elem.strip('"[] ') for elem in input().strip().split(',')]
+def parseInput(token: str):
+    token = token.strip()
 
-    # change type if int or float
-    if inputList[0].replace('-', '', 1).isdigit():
-        inputList = [int(elem) for elem in inputList]
-    elif inputList[0].replace('-', '', 1).replace('.', '', 1).isdigit():
-        inputList = [float(elem) for elem in inputList]
+    if token[0] == '[':
+        assert(token[-1] == ']')
 
-    # change type if not list
-    if len(inputList) == 1:
-        return inputList[0]
+        resList = []
+        start, end, pNum = 1, 1, 0
+
+        while end < len(token) - 1:
+            if token[end] == '[':
+                pNum += 1
+            elif token[end] == ']':
+                pNum -= 1
+            elif token[end] == ',' and pNum == 0:
+                resList.append(parseInput(token[start:end]))
+                start = end + 1
+            end += 1
+
+        assert(pNum == 0)
+        resList.append(parseInput(token[start:end]))
+
+        return resList
     else:
-        return inputList
+        if token.replace('-', '', 1).isdigit():
+            return int(token)
+        elif token.replace('-', '', 1).replace('.', '', 1).isdigit():
+            return float(token)
     
 if __name__ == '__main__':
     print(solution())
