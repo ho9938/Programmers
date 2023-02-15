@@ -31,6 +31,10 @@ def parseInput(token: str):
             return int(token)
         elif token.replace('-', '', 1).replace('.', '', 1).isdigit():
             return float(token)
+        elif token[0] == '"' or token[0] == "'":
+            return token[1:-1]
+        else:
+            return token
     
 if __name__ == '__main__':
     print(solution())
